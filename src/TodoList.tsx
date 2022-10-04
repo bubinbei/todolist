@@ -1,9 +1,11 @@
 import React from 'react';
+import {FilterValueType} from './App'
 
 type TodoListPropsType ={
     title: string
     tasks: Array<TaskType>
     remTask:(taskId: number) => void
+    chekigType: (filter: FilterValueType) => void
 }
 
 type TaskType = {
@@ -31,9 +33,9 @@ const TodoList = (props: TodoListPropsType) => {
                       
                     </ul>
                     <div>
-                        <button>All</button>
-                        <button>Active</button>
-                        <button>Completed</button>
+                        <button onClick={()=>props.chekigType('all')} >All</button>
+                        <button onClick={()=>props.chekigType('active')}>Active</button>
+                        <button onClick={()=>props.chekigType('completed')}>Completed</button>
                     </div>
                 </div>
     );
