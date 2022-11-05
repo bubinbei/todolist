@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, ChangeEvent, KeyboardEvent} from 'react'
 import {FilterValueType} from './App'
 
 
@@ -17,33 +17,49 @@ type TaskType = {
 
 
 function TodoList(props: TodoListPropsType) {
-  
-  const [name, setName] = useState(" ");
 
+  const [name, setName] = useState(" ");
+  const addTaskNew = () => {
+    props.addTask(name)
+    setName('')
+  }
   const listing = props.tasks.map(el => {
+      const onRemoveTask = () => props.removeTask(el.id)
       return  <li key={el.id}>
                 <input type="checkbox" checked={el.isDone}></input>
                 <span>{el.title}</span>
-                <button onClick={()=>{props.removeTask(el.id)}}>x</button>
+                <button onClick={onRemoveTask}>x</button>
               </li>
     })
 
-  
+  const onChangeNewTaskHandler = (e:ChangeEvent<HTMLInputElement>) => {
+    setName(e.currentTarget.value)
+  }
+  const onCeyPressHandler = (e:KeyboardEvent<HTMLInputElement>) => {
+    e.charCode === 13 && addTaskNew()
+  }
+  const onClikAllHandler = () => props.chekigType('all')
+  const onClikActiveHandler = () => props.chekigType('active')
+  const onClikCompletedHandler = () => props.chekigType('completed')
+
+
   return (
     <div>
       <h3>{props.todoListTitle}</h3>
       <div>
-        <input type="text" value = {name} onChange={
-          (e)=>setName(e.currentTarget.value)
-          }/>
-        {/* <button onClick={()=>{props.addTask("New")}}>+</button> */}
-        <button onClick={()=>props.addTask(name)}>+</button>
+        <input 
+          type="text" 
+          value = {name} 
+          onChange={onChangeNewTaskHandler}
+          onKeyPress={onCeyPressHandler}
+          />
+        <button onClick={addTaskNew}>+</button>
       </div>
       <ul>{listing}</ul>
       <div>
-        <button onClick={()=>{props.chekigType('all')}}>All</button>
-        <button onClick={()=>{props.chekigType('active')}}>Active</button>
-        <button onClick={()=>{props.chekigType('completed')}}>Completed</button>
+        <button onClick={onClikAllHandler}>All</button>
+        <button onClick={onClikActiveHandler}>Active</button>
+        <button onClick={onClikCompletedHandler}>Completed</button>
       </div>
     </div>
   )
